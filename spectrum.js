@@ -81,17 +81,28 @@ $(document).ready(function() {
         var array =  new Uint8Array(analyser.frequencyBinCount);
         analyser.getByteFrequencyData(array);
         // clear the current state
-        ctx.clearRect(0, 0, 1000, 325);
+        ctx.clearRect(0, 0, 600, 600);
         // set the fill style
         ctx.fillStyle=gradient;
         drawSpectrum(array);
     }
 
     function drawSpectrum(array) {
+        // Max Value possible for any bucket seems to be 255
+        var ulX = 120;
+        var ulY = 30;
+        var maxHeight = 50;
+        var x = 0, y = 0, barWidth = 5, barHeight = 0;
+        var bucketNumber = 0;
         for ( var i = 0; i < (array.length); i+=2 ){
             var value = array[i];
-            ctx.fillRect(i*25,325-value,20,325);
+            var scaledValue = value/255*maxHeight;
+            x = ulX + bucketNumber*(barWidth+2);
+            y = ulY + maxHeight - scaledValue
+            barHeight = scaledValue;
+            ctx.fillRect(x, y, barWidth, barHeight);
             //  console.log([i,value])
+            bucketNumber++;
         }
     };
 
